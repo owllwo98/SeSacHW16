@@ -21,9 +21,6 @@ class ShoppingDetailCollectionViewCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        
-        
-        
         configureHierarchy()
         configureUI()
         configureLayout()
@@ -78,16 +75,19 @@ class ShoppingDetailCollectionViewCell: UICollectionViewCell {
     }
     
     func configureData(_ list: ShoppingDetail) {
-        let url = URL(string: list.image)
+        let url = URL(string: list.image ?? "star")
         itemImageView.kf.setImage(with: url)
         
-        var str = list.title
-        
-       
+        let numberFormatter: NumberFormatter = NumberFormatter()
+        numberFormatter.numberStyle = .decimal
+        let patten = "<[^>]+>|&quot;|<b>|</b>"
         
         mallName.text = list.mallName
-        title.text = list.title
-        lprice.text = list.lprice
+        title.text = list.title?.replacingOccurrences(of: patten,
+                                                     with: "",
+                                                     options: .regularExpression,
+                                                     range: nil)
+        lprice.text = numberFormatter.string(for: Int(list.lprice ?? "0"))
     }
     
     

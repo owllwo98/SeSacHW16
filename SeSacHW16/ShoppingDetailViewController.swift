@@ -12,7 +12,7 @@ import Kingfisher
 
 class ShoppingDetailViewController: UIViewController {
     var shoppingDetailViewTitle: String?
-    var list: [ShoppingDetail] = []
+    var list: [ShoppingDetail] = [] 
     var total: Int = 0
     
     let totalLabel: UILabel = UILabel()
@@ -24,40 +24,47 @@ class ShoppingDetailViewController: UIViewController {
         button.setTitle("  정확도  ", for: .normal)
         button.layer.cornerRadius = 8
         button.titleLabel?.font = .systemFont(ofSize: 14, weight: .semibold)
+        button.tag = 0
+        button.addTarget(self, action: #selector(similar), for: .touchUpInside)
         
         return button
     }()
     
     lazy var dateSortButton: UIButton = {
         let button = UIButton()
-        button.setTitleColor(.black , for: .normal)
-        button.backgroundColor = .white
+        button.setTitleColor(.white , for: .normal)
+        button.backgroundColor = .black
         button.setTitle("  날짜순  ", for: .normal)
         button.layer.cornerRadius = 8
         button.titleLabel?.font = .systemFont(ofSize: 14, weight: .semibold)
-      
+        button.tag = 1
+        button.addTarget(self, action: #selector(dateSort), for: .touchUpInside)
         
         return button
     }()
     
     lazy var highPriceSortButton:  UIButton = {
         let button = UIButton()
-        button.setTitleColor(.black , for: .normal)
-        button.backgroundColor = .white
+        button.setTitleColor(.white , for: .normal)
+        button.backgroundColor = .black
         button.setTitle("  가격높은순  ", for: .normal)
         button.layer.cornerRadius = 8
         button.titleLabel?.font = .systemFont(ofSize: 14, weight: .semibold)
+        button.tag = 2
+        button.addTarget(self, action: #selector(descending), for: .touchUpInside)
         
         return button
     }()
     
     lazy var lowPirceSortBurron:  UIButton = {
         let button = UIButton()
-        button.setTitleColor(.black , for: .normal)
-        button.backgroundColor = .white
+        button.setTitleColor(.white , for: .normal)
+        button.backgroundColor = .black
         button.setTitle("  가격낮은순  ", for: .normal)
         button.layer.cornerRadius = 8
         button.titleLabel?.font = .systemFont(ofSize: 14, weight: .semibold)
+        button.tag = 3
+        button.addTarget(self, action: #selector(Ascending), for: .touchUpInside)
         
         return button
     }()
@@ -74,6 +81,10 @@ class ShoppingDetailViewController: UIViewController {
         configureHierarchy()
         configureLayout()
         configureView()
+        
+        [standardButton, dateSortButton, highPriceSortButton, lowPirceSortBurron].forEach {
+            $0.addTarget(self, action: #selector(self.radioButton(_ :)), for: .touchUpInside)
+        }
     }
     
     func configureHierarchy() {
@@ -127,7 +138,6 @@ class ShoppingDetailViewController: UIViewController {
         totalLabel.font = .systemFont(ofSize: 16, weight: .semibold)
         
         collectionView.backgroundColor = .black
-    
     }
     
     func collectionViewLayout() -> UICollectionViewLayout {
@@ -153,18 +163,118 @@ class ShoppingDetailViewController: UIViewController {
 
 extension ShoppingDetailViewController: UICollectionViewDataSource, UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 100
+        return list.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ShoppingDetailCollectionViewCell", for: indexPath) as! ShoppingDetailCollectionViewCell
        
-        
         cell.configureData(list[indexPath.row])
-        cell.itemImageView.layer.cornerRadius = 8
+        
+        DispatchQueue.main.async {
+            cell.itemImageView.layer.cornerRadius = 10
+            cell.itemImageView.clipsToBounds = true
+        }
+        
        
         return cell
     }
+}
+
+extension ShoppingDetailViewController {
+    @objc
+    func radioButton(_ sender: UIButton) {
+        [standardButton, dateSortButton, highPriceSortButton, lowPirceSortBurron].forEach {
+            if $0.tag == sender.tag {
+                $0.backgroundColor = .white
+                $0.setTitleColor(.black, for: .normal)
+            } else {
+                $0.backgroundColor = .black
+                $0.setTitleColor(.white, for: .normal)
+            }
+        }
+    }
     
+    // MARK: 과제를 착각해서 기존 배열에서 정렬하는 건 줄 알았는데 중간에 깨달았습니다.. 지우긴 아까워서 ㅎㅎ;
+    /*
+    @objc
+    func descending() {
+        let newList = list.sorted(by: {Int($0.lprice ?? "") ?? 0 > Int($1.lprice ?? "") ?? 0})
+        list = newList
+        
+        collectionView.reloadData()
+    }
+    
+    @objc
+    func Ascending() {
+        let newList = list.sorted(by: {Int($0.lprice ?? "") ?? 0 < Int($1.lprice ?? "") ?? 0})
+        list = newList
+        
+        collectionView.reloadData()
+    }
+    
+    @objc
+    func dateAscending() {
+        
+    }
+    
+    @objc
+    func accuracy() {
+        
+    }
+    */
+    
+    @objc
+    func descending() {
+        fetchShoppingData("dsc") {
+            [weak self] in
+            guard let self = self else { return }
+            self.collectionView.reloadData()
+        }
+    }
+    
+    @objc
+    func Ascending() {
+        fetchShoppingData("asc") {
+            [weak self] in
+            guard let self = self else { return }
+            self.collectionView.reloadData()
+        }
+    }
+    
+    @objc
+    func dateSort() {
+        fetchShoppingData("date") {
+            [weak self] in
+            guard let self = self else { return }
+            self.collectionView.reloadData()
+        }
+    }
+    
+    @objc
+    func similar() {
+        fetchShoppingData("sim") {
+            [weak self] in
+            guard let self = self else { return }
+            self.collectionView.reloadData()
+        }
+    }
+    
+    func fetchShoppingData(_ sort: String = "sim" ,completion: @escaping () -> Void) {
+        let url = "https://openapi.naver.com/v1/search/shop.json?query=\(String(describing: shoppingDetailViewTitle))&display=100&sort=\(sort)"
+        let headers: HTTPHeaders = ["X-Naver-Client-Id" : APIKey.naverID, "X-Naver-Client-Secret" : APIKey.naverSecret]
+        
+        AF.request(url, method: .get, headers: headers).responseDecodable(of: Shopping.self) { response in
+            switch response.result {
+                
+            case.success(let value):
+                self.total = value.total ?? 0
+                self.list = value.items
+                completion()
+            case.failure(let error) :
+                print(error)
+            }
+        }
+    }
     
 }

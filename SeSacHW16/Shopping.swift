@@ -9,14 +9,14 @@ import Foundation
 
 struct Shopping: Decodable {
     let items: [ShoppingDetail]
-    let total: Int
+    let total: Int?
 }
 
 struct ShoppingDetail: Decodable {
-    let title: String
-    let image: String
-    let lprice: String
-    let mallName: String
+    let title: String?
+    let image: String?
+    let lprice: String?
+    let mallName: String?
 }
 
 
