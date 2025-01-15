@@ -17,6 +17,12 @@
 		5E1AEADC2D37937B001143BF /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 5E1AEADB2D37937B001143BF /* SnapKit */; };
 		5E1AEADF2D379386001143BF /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 5E1AEADE2D379386001143BF /* Kingfisher */; };
 		5E1AEAE32D3793C9001143BF /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 5E1AEAE22D3793C9001143BF /* .gitignore */; };
+		5E1AEAE52D3793F7001143BF /* APIKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E1AEAE42D3793F7001143BF /* APIKey.swift */; };
+		5E1AEAE72D3794E6001143BF /* ShoppingTitleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E1AEAE62D3794E6001143BF /* ShoppingTitleViewController.swift */; };
+		5E1AEAE92D3794F8001143BF /* ShoppingDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E1AEAE82D3794F8001143BF /* ShoppingDetailViewController.swift */; };
+		5E1AEAEB2D37951A001143BF /* ShoppingDetailCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E1AEAEA2D37951A001143BF /* ShoppingDetailCollectionViewCell.swift */; };
+		5E1AEAED2D379744001143BF /* Shopping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E1AEAEC2D379744001143BF /* Shopping.swift */; };
+		5E1AEAEF2D37F4D0001143BF /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E1AEAEE2D37F4D0001143BF /* Extension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,6 +35,12 @@
 		5E1AEACF2D379355001143BF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		5E1AEAD12D379355001143BF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5E1AEAE22D3793C9001143BF /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
+		5E1AEAE42D3793F7001143BF /* APIKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIKey.swift; sourceTree = "<group>"; };
+		5E1AEAE62D3794E6001143BF /* ShoppingTitleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingTitleViewController.swift; sourceTree = "<group>"; };
+		5E1AEAE82D3794F8001143BF /* ShoppingDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingDetailViewController.swift; sourceTree = "<group>"; };
+		5E1AEAEA2D37951A001143BF /* ShoppingDetailCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingDetailCollectionViewCell.swift; sourceTree = "<group>"; };
+		5E1AEAEC2D379744001143BF /* Shopping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shopping.swift; sourceTree = "<group>"; };
+		5E1AEAEE2D37F4D0001143BF /* Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,6 +84,12 @@
 				5E1AEACC2D379355001143BF /* Assets.xcassets */,
 				5E1AEACE2D379355001143BF /* LaunchScreen.storyboard */,
 				5E1AEAD12D379355001143BF /* Info.plist */,
+				5E1AEAE42D3793F7001143BF /* APIKey.swift */,
+				5E1AEAE62D3794E6001143BF /* ShoppingTitleViewController.swift */,
+				5E1AEAE82D3794F8001143BF /* ShoppingDetailViewController.swift */,
+				5E1AEAEA2D37951A001143BF /* ShoppingDetailCollectionViewCell.swift */,
+				5E1AEAEC2D379744001143BF /* Shopping.swift */,
+				5E1AEAEE2D37F4D0001143BF /* Extension.swift */,
 			);
 			path = SeSacHW16;
 			sourceTree = "<group>";
@@ -158,8 +176,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5E1AEAEF2D37F4D0001143BF /* Extension.swift in Sources */,
 				5E1AEAC82D379353001143BF /* ViewController.swift in Sources */,
+				5E1AEAED2D379744001143BF /* Shopping.swift in Sources */,
+				5E1AEAE92D3794F8001143BF /* ShoppingDetailViewController.swift in Sources */,
+				5E1AEAE72D3794E6001143BF /* ShoppingTitleViewController.swift in Sources */,
 				5E1AEAC42D379353001143BF /* AppDelegate.swift in Sources */,
+				5E1AEAEB2D37951A001143BF /* ShoppingDetailCollectionViewCell.swift in Sources */,
+				5E1AEAE52D3793F7001143BF /* APIKey.swift in Sources */,
 				5E1AEAC62D379353001143BF /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
