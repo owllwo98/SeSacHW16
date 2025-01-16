@@ -13,10 +13,21 @@ struct Shopping: Decodable {
 }
 
 struct ShoppingDetail: Decodable {
+//    let title: String?
+//    let image: String?
+//    let lprice: String?
+//    let mallName: String?
+    
     let title: String?
+    let link: String?
     let image: String?
-    let lprice: String?
-    let mallName: String?
+    let lprice, hprice, mallName, productID: String?
+    let productType: String?
+    let brand, maker: String?
+    let category1: String?
+    let category2: String?
+    let category3: String?
+    let category4: String?
 }
 
 

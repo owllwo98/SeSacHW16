@@ -11,9 +11,13 @@ import SnapKit
 import Kingfisher
 
 class ShoppingDetailViewController: UIViewController {
-    var shoppingDetailViewTitle: String?
-    var list: [ShoppingDetail] = [] 
+    var shoppingDetailViewTitle: String = ""
+    var list: [ShoppingDetail] = []
     var total: Int = 0
+    
+    var start: Int = 1
+    var isEnd: Bool = false
+    var status: String = "sim"
     
     let totalLabel: UILabel = UILabel()
     
@@ -73,7 +77,8 @@ class ShoppingDetailViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        print(shoppingDetailViewTitle)
+        
         view.backgroundColor = .black
         
         self.navigationItem.title = shoppingDetailViewTitle
@@ -96,6 +101,7 @@ class ShoppingDetailViewController: UIViewController {
         
         collectionView.dataSource = self
         collectionView.delegate = self
+        collectionView.prefetchDataSource = self
         collectionView.register(ShoppingDetailCollectionViewCell.self, forCellWithReuseIdentifier: "ShoppingDetailCollectionViewCell")
     }
     
@@ -154,8 +160,6 @@ class ShoppingDetailViewController: UIViewController {
         layout.scrollDirection = .vertical
         layout.minimumLineSpacing = 60
         
-        print(deviceWidth)
-        print(cellWidth / 2)
         return layout
     }
 
@@ -169,13 +173,12 @@ extension ShoppingDetailViewController: UICollectionViewDataSource, UICollection
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ShoppingDetailCollectionViewCell", for: indexPath) as! ShoppingDetailCollectionViewCell
        
-        cell.configureData(list[indexPath.row])
+        cell.configureData(list[indexPath.item])
         
         DispatchQueue.main.async {
             cell.itemImageView.layer.cornerRadius = 10
             cell.itemImageView.clipsToBounds = true
         }
-        
        
         return cell
     }
@@ -224,57 +227,103 @@ extension ShoppingDetailViewController {
     }
     */
     
+//    enum Sorted {
+//        case dsc
+//        case asc
+//        case date
+//        case sim
+//    }
+    
     @objc
     func descending() {
-        fetchShoppingData("dsc") {
-            [weak self] in
-            guard let self = self else { return }
-            self.collectionView.reloadData()
-        }
+        status = "dsc"
+        start = 1
+        sort("dsc")
     }
     
     @objc
     func Ascending() {
-        fetchShoppingData("asc") {
-            [weak self] in
-            guard let self = self else { return }
-            self.collectionView.reloadData()
-        }
+        status = "asc"
+        start = 1
+        sort("asc")
     }
     
     @objc
     func dateSort() {
-        fetchShoppingData("date") {
-            [weak self] in
-            guard let self = self else { return }
-            self.collectionView.reloadData()
-        }
+        status = "date"
+        start = 1
+        sort("date")
     }
     
     @objc
     func similar() {
-        fetchShoppingData("sim") {
-            [weak self] in
-            guard let self = self else { return }
-            self.collectionView.reloadData()
-        }
+        status = "sim"
+        start = 1
+        sort("sim")
     }
     
-    func fetchShoppingData(_ sort: String = "sim" ,completion: @escaping () -> Void) {
-        let url = "https://openapi.naver.com/v1/search/shop.json?query=\(String(describing: shoppingDetailViewTitle))&display=100&sort=\(sort)"
+    func fetchShoppingData(_ sort: String = "sim", completion: @escaping () -> Void) {
+        let url = "https://openapi.naver.com/v1/search/shop.json?query=\(shoppingDetailViewTitle)&display=30&start=\(start)&sort=\(sort)"
         let headers: HTTPHeaders = ["X-Naver-Client-Id" : APIKey.naverID, "X-Naver-Client-Secret" : APIKey.naverSecret]
         
         AF.request(url, method: .get, headers: headers).responseDecodable(of: Shopping.self) { response in
             switch response.result {
                 
             case.success(let value):
-                self.total = value.total ?? 0
-                self.list = value.items
+                
+                // 로직으로 처리하려고 했는데 Naver API 에서 total 갯수를 초가하는 값을 요구하면 그냥 빈배열만 보냐줘서 따로 처리할게 없었습니다.
+                if self.total > self.start {
+                    self.isEnd = false
+                } else {
+                    self.isEnd = true
+                }
+                
+                if self.start == 1 {
+                    self.total = value.total ?? 0
+                    self.list = value.items
+                } else {
+                    self.total = value.total ?? 0
+                    self.list.append(contentsOf: value.items)
+                }
+        
+                if self.start == 1 {
+                    self.collectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .top, animated: false)
+                }
+               
                 completion()
             case.failure(let error) :
                 print(error)
             }
         }
     }
+    
+    func sort(_ sort: String) {
+        fetchShoppingData(sort) {
+            [weak self] in
+            guard let self = self else { return }
+            self.collectionView.reloadData()
+        }
+    }
+
+}
+
+extension ShoppingDetailViewController: UICollectionViewDataSourcePrefetching {
+    func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
+        for item in indexPaths {
+            if list.count - 2 == item.item {
+                start += 30
+                fetchShoppingData(status) {
+                    [weak self] in
+                    guard let self = self else { return }
+                    self.collectionView.reloadData()
+                }
+            }
+        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cancelPrefetchingForItemsAt indexPaths: [IndexPath]) {
+       
+    }
+    
     
 }
