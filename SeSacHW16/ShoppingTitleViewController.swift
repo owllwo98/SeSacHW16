@@ -11,6 +11,7 @@ import SnapKit
 
 class ShoppingTitleViewController: UIViewController {
     
+    
     var query: String = ""
 
     var total: Int = 0
@@ -105,16 +106,14 @@ extension ShoppingTitleViewController: UISearchBarDelegate {
             shoppingSearchBar.placeholder = "2글자 이상 입력해주세요"
         } else {
             query = shoppingSearchBar.text ?? "네이버"
-            NetworkManager.shared.request(url: URLValue.naver + "query=\(query)", headers: HttpHeader.naver, T: Shopping.self) { [weak self] (Shooping : Shopping) in
+            NetworkManager.shared.request(url: URLValue.naver + "query=\(query)", headers: HttpHeader.naver, T: Shopping.self) { [weak self] (shopping: Shopping) in
                 guard let self = self else {return}
                 
                 let vc = ShoppingDetailViewController()
                 
                 vc.shoppingDetailViewTitle = query
-                vc.list = Shooping.items
-                vc.total = Shooping.total ?? 0
-                
-                print(Shooping.items)
+                vc.list = shopping.items
+                vc.total = shopping.total ?? 0
                 
                 self.navigationController?.pushViewController(vc, animated: true)
             }
