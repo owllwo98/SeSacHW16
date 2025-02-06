@@ -23,7 +23,8 @@ class NetworkManager {
                 completion(value.self)
             case.failure(let error) :
                 print(error)
-                
+                print(url)
+                print(response.response?.statusCode)
             }
         }
     }

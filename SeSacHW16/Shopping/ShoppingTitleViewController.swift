@@ -10,13 +10,6 @@ import Alamofire
 import SnapKit
 
 class ShoppingTitleViewController: UIViewController {
-    
-    
-    var query: String = ""
-
-    var total: Int = 0
-    var list: [ShoppingDetail] = []
-    
     lazy var shoppingSearchBar: UISearchBar = {
         let searchBar = UISearchBar()
         searchBar.searchTextField.textColor = .white
@@ -27,6 +20,8 @@ class ShoppingTitleViewController: UIViewController {
     
     let posterImageView: UIImageView = UIImageView()
     
+    let viewModel = ShoppingTitleViewModel()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -36,6 +31,30 @@ class ShoppingTitleViewController: UIViewController {
         configureLayout()
         configureView()
         
+        bindData()
+        
+    }
+    
+    func bindData() {
+        viewModel.outputText.lazyBind { text in
+            self.shoppingSearchBar.text = text
+        }
+        
+        viewModel.outputPlaceHolder.lazyBind { text in
+            self.shoppingSearchBar.placeholder = text
+        }
+        
+        viewModel.outputNav.lazyBind { value in
+            let vc = ShoppingDetailViewController()
+            
+            guard let text = self.shoppingSearchBar.text else {
+                return
+            }
+            
+            vc.viewModel.inputQuery.value = text
+            
+            self.navigationController?.pushViewController(vc, animated: true)
+        }
     }
     
     func configureHierarchy() {
@@ -74,29 +93,6 @@ class ShoppingTitleViewController: UIViewController {
 
 extension ShoppingTitleViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        print(#function)
-        
-        guard let text = shoppingSearchBar.text else {
-            return
-        }
-        
-        if text.count < 2 {
-            shoppingSearchBar.text = ""
-            shoppingSearchBar.placeholder = "2글자 이상 입력해주세요"
-        } else {
-            query = shoppingSearchBar.text ?? "네이버"
-            NetworkManager.shared.request(url: URLValue.naver + "query=\(query)", headers: HttpHeader.naver, T: Shopping.self) { [weak self] (shopping: Shopping) in
-                guard let self = self else {return}
-                
-                let vc = ShoppingDetailViewController()
-                
-                vc.shoppingDetailViewTitle = query
-                vc.list = shopping.items
-                vc.total = shopping.total ?? 0
-                
-                self.navigationController?.pushViewController(vc, animated: true)
-            }
-        }
-        
+        viewModel.inputTextField.value = searchBar.text
     }
 }
