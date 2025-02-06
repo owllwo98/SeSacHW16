@@ -35,7 +35,7 @@ class ShoppingDetailViewController: UIViewController {
         configureActions()
     }
     
-    private func configureView() {
+    func configureView() {
         shoppingDetailView.totalLabel.text = "\(total) 개의 검색 결과"
         shoppingDetailView.collectionView.dataSource = self
         shoppingDetailView.collectionView.delegate = self
@@ -43,7 +43,7 @@ class ShoppingDetailViewController: UIViewController {
         shoppingDetailView.collectionView.register(ShoppingDetailCollectionViewCell.self, forCellWithReuseIdentifier: "ShoppingDetailCollectionViewCell")
     }
     
-    private func configureActions() {
+    func configureActions() {
         [shoppingDetailView.standardButton,
          shoppingDetailView.dateSortButton,
          shoppingDetailView.highPriceSortButton,
@@ -93,36 +93,6 @@ extension ShoppingDetailViewController {
         }
     }
     
-    // MARK: 과제를 착각해서 기존 배열에서 정렬하는 건 줄 알았는데 중간에 깨달았습니다.. 지우긴 아까워서 ㅎㅎ;
-    /*
-     @objc
-     func descending() {
-     let newList = list.sorted(by: {Int($0.lprice ?? "") ?? 0 > Int($1.lprice ?? "") ?? 0})
-     list = newList
-     
-     collectionView.reloadData()
-     }
-     
-     @objc
-     func Ascending() {
-     let newList = list.sorted(by: {Int($0.lprice ?? "") ?? 0 < Int($1.lprice ?? "") ?? 0})
-     list = newList
-     
-     collectionView.reloadData()
-     }
-     
-     @objc
-     func dateAscending() {
-     
-     }
-     
-     @objc
-     func accuracy() {
-     
-     }
-     */
-    
-    
     @objc
     func descending() {
         sort(by: "dsc")
@@ -152,7 +122,6 @@ extension ShoppingDetailViewController {
 
 extension ShoppingDetailViewController: UICollectionViewDataSourcePrefetching {
     func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
-        print(#function)
         for item in indexPaths {
             if list.count - 2 == item.item {
                 start += 30
@@ -192,3 +161,33 @@ extension ShoppingDetailViewController {
         }
     }
 }
+
+
+// MARK: 과제를 착각해서 기존 배열에서 정렬하는 건 줄 알았는데 중간에 깨달았습니다.. 지우긴 아까워서 ㅎㅎ;
+/*
+ @objc
+ func descending() {
+ let newList = list.sorted(by: {Int($0.lprice ?? "") ?? 0 > Int($1.lprice ?? "") ?? 0})
+ list = newList
+ 
+ collectionView.reloadData()
+ }
+ 
+ @objc
+ func Ascending() {
+ let newList = list.sorted(by: {Int($0.lprice ?? "") ?? 0 < Int($1.lprice ?? "") ?? 0})
+ list = newList
+ 
+ collectionView.reloadData()
+ }
+ 
+ @objc
+ func dateAscending() {
+ 
+ }
+ 
+ @objc
+ func accuracy() {
+ 
+ }
+ */

@@ -38,27 +38,6 @@ class ShoppingTitleViewController: UIViewController {
         
     }
     
-//    func fetchShoppingData(completion: @escaping () -> Void) {
-//        query = shoppingSearchBar.text ?? "네이버"
-//        let url = "https://openapi.naver.com/v1/search/shop.json?query=\(query)&display=30&start=1&sort=sim"
-//        let headers: HTTPHeaders = ["X-Naver-Client-Id" : APIKey.naverID, "X-Naver-Client-Secret" : APIKey.naverSecret]
-//        
-//        AF.request(url, method: .get, headers: headers).responseDecodable(of: Shopping.self) { response in
-//            switch response.result {
-//                
-//            case.success(let value):
-//                self.total = value.total ?? 0
-//                self.list = value.items
-//                
-//                let vc = ShoppingDetailViewController()
-//                
-//                completion()
-//            case.failure(let error) :
-//                print(error)
-//            }
-//        }
-//    }
-    
     func configureHierarchy() {
         view.addSubview(shoppingSearchBar)
         view.addSubview(posterImageView)
